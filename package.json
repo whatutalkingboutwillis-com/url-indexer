@@ -1,0 +1,11 @@
+{
+  "name": "url-indexer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "google-auth-library": "^9.4.1"
+  }
+}

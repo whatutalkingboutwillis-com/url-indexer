@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "functions": {
+    "api/*.js": {
+      "memory": 256,
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/carrier/:id", "destination": "/api/carrier?id=:id" },
+    { "source": "/", "destination": "/public/index.html" }
+  ]
+}
