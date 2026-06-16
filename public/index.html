@@ -3,157 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Instant URL Indexer - Submit Your Page for Fast Google Crawl</title>
-<meta name="description" content="Submit your URL for fast indexing. Uses Google Indexing API + IndexNow to notify search engines.">
-<meta name="google-site-verification" content="hLtd8fJDISc1C_gGX_F4HZKuWR6UfvyA1pDyoHp3GPg" />
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Instant URL Indexer",
-  "applicationCategory": "SEO Tool",
-  "operatingSystem": "Any",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-}
-</script>
+<title>Instant URL Indexer - Fast Google Indexing Tool</title>
+<meta name="description" content="Submit your URLs for fast Google indexing. Powered by Sinbyte crawling network.">
 
 <style>
   :root{
-    --bg:#0b1020; --panel:#121a33; --accent:#4f7cff; --accent2:#22d3ee;
-    --text:#e6eaf5; --muted:#9aa4c2; --success:#34d399; --error:#f87171;
-    --radius:14px; --font-main:'Sora', system-ui, sans-serif; --font-mono:'JetBrains Mono', monospace;
+    --bg:#0b1020; --panel:#121a33; --panel2:#0e1530;
+    --accent:#4f7cff; --accent2:#22d3ee;
+    --text:#e6eaf5; --muted:#9aa4c2;
+    --success:#34d399; --error:#f87171; --warning:#fbbf24;
+    --radius:14px; --font:'Sora',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
+  *{box-sizing:border-box;margin:0;padding:0;}
   body{
-    font-family:var(--font-main);
-    background:linear-gradient(135deg,#0b1020 0%, #131a36 100%);
-    color:var(--text); min-height:100vh;
-    display:flex; align-items:center; justify-content:center; padding:24px;
+    font-family:var(--font);
+    background:linear-gradient(135deg,#0b1020,#131a36);
+    color:var(--text);min-height:100vh;
+    display:flex;align-items:center;justify-content:center;padding:24px;
   }
   .card{
-    width:100%; max-width:680px; background:var(--panel);
-    border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius);
-    padding:32px; box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    width:100%;max-width:700px;background:var(--panel);
+    border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);
+    padding:36px;box-shadow:0 20px 60px rgba(0,0,0,0.4);
   }
-  .eyebrow{ font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--accent2); font-weight:600; margin-bottom:8px; }
-  h1{ font-size:28px; font-weight:700; margin-bottom:6px;
+  .eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:10px;}
+  h1{
+    font-size:30px;font-weight:800;margin-bottom:8px;
     background:linear-gradient(90deg,var(--text),var(--accent2));
-    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-  p.sub{ color:var(--muted); font-size:14px; margin-bottom:24px; line-height:1.6; }
-  label{ display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--muted); }
-  .input-row{ display:flex; gap:10px; margin-bottom:18px; }
-  input[type="url"]{
-    flex:1; background:#0b1020; border:1px solid rgba(255,255,255,0.1); color:var(--text);
-    padding:14px 16px; border-radius:10px; font-size:15px; outline:none; transition:border-color 0.2s;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   }
-  input[type="url"]:focus{ border-color:var(--accent); }
-  button.submit-btn{
-    width:100%; padding:15px; border:none; border-radius:10px;
-    background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#08101f;
-    font-weight:700; font-size:15px; cursor:pointer; transition:transform 0.15s, box-shadow 0.15s; font-family:var(--font-main);
+  p.sub{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.7;}
+
+  .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+  .badge{
+    font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;
+    background:rgba(79,124,255,0.12);border:1px solid rgba(79,124,255,0.25);color:var(--accent2);
   }
-  button.submit-btn:hover{ transform:translateY(-1px); box-shadow:0 8px 24px rgba(79,124,255,0.35); }
-  button.submit-btn:disabled{ opacity:0.6; cursor:not-allowed; transform:none; }
-  .results{ margin-top:20px; display:flex; flex-direction:column; gap:10px; }
+
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--muted);}
+  textarea{
+    width:100%;min-height:120px;background:#0b1020;
+    border:1px solid rgba(255,255,255,0.1);color:var(--text);
+    padding:14px 16px;border-radius:10px;font-size:14px;
+    font-family:var(--mono);outline:none;resize:vertical;margin-bottom:6px;
+    transition:border-color 0.2s;
+  }
+  textarea:focus{border-color:var(--accent);}
+  .hint{font-size:12px;color:var(--muted);margin-bottom:18px;}
+
+  .url-count{
+    display:inline-block;font-size:13px;font-weight:600;
+    color:var(--accent2);margin-bottom:16px;
+  }
+
+  button.btn{
+    width:100%;padding:16px;border:none;border-radius:10px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    color:#08101f;font-weight:700;font-size:15px;cursor:pointer;
+    transition:transform 0.15s,box-shadow 0.15s;font-family:var(--font);
+  }
+  button.btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,124,255,0.35);}
+  button.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+  .results{margin-top:24px;display:flex;flex-direction:column;gap:10px;}
   .result-item{
-    display:flex; justify-content:space-between; align-items:center; background:#0b1020;
-    border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; font-size:14px; gap:10px; flex-wrap:wrap;
+    display:flex;justify-content:space-between;align-items:center;
+    background:#0b1020;border:1px solid rgba(255,255,255,0.06);
+    border-radius:10px;padding:13px 16px;font-size:14px;gap:10px;flex-wrap:wrap;
   }
-  .result-item .name{ font-weight:600; }
-  .status{ font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px; white-space:nowrap; }
-  .status.success{ background:rgba(52,211,153,0.15); color:var(--success); }
-  .status.error{ background:rgba(248,113,113,0.15); color:var(--error); }
-  .status.pending{ background:rgba(255,255,255,0.08); color:var(--muted); }
-  .note{ margin-top:20px; font-size:12.5px; color:var(--muted); line-height:1.7; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; }
-  .note strong{ color:var(--text); }
-  a{ color:var(--accent2); text-decoration:none; }
-  @media(max-width:480px){ .card{ padding:22px; } h1{ font-size:22px; } .input-row{ flex-direction:column; } }
+  .result-item .name{font-weight:600;font-size:13px;word-break:break-all;flex:1;}
+  .status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .status.success{background:rgba(52,211,153,0.15);color:var(--success);}
+  .status.error{background:rgba(248,113,113,0.15);color:var(--error);}
+  .status.pending{background:rgba(255,255,255,0.08);color:var(--muted);}
+  .status.warning{background:rgba(251,191,36,0.15);color:var(--warning);}
+
+  .summary-box{
+    margin-top:16px;padding:16px 18px;border-radius:10px;
+    border:1px solid rgba(52,211,153,0.2);background:rgba(52,211,153,0.06);
+    font-size:14px;display:none;
+  }
+  .summary-box.show{display:block;}
+  .summary-box strong{color:var(--success);}
+
+  .note{
+    margin-top:22px;font-size:12.5px;color:var(--muted);
+    line-height:1.7;border-top:1px solid rgba(255,255,255,0.06);padding-top:18px;
+  }
+  .note strong{color:var(--text);}
+
+  @media(max-width:480px){.card{padding:22px;}h1{font-size:22px;}}
 </style>
 </head>
 <body>
-
 <div class="card">
-  <div class="eyebrow">Instant URL Indexer</div>
-  <h1>Submit Your URL</h1>
+  <div class="eyebrow">⚡ Instant URL Indexer</div>
+  <h1>Submit URLs for Fast Indexing</h1>
   <p class="sub">
-    This sends your URL to the Google Indexing API (via a linked carrier page) and pings IndexNow for Bing/Yandex.
-    It maximizes crawl speed — actual indexing time still depends on Google's evaluation of your page.
+    Paste your URLs below (one per line). We'll submit them to our indexing network for priority crawling by Google and other search engines.
   </p>
 
-  <label for="urlInput">Page URL</label>
-  <div class="input-row">
-    <input type="url" id="urlInput" placeholder="https://yourwebsite.com/your-page" required>
+  <div class="badge-row">
+    <span class="badge">✓ Google Crawl Trigger</span>
+    <span class="badge">✓ Bing + Yandex (IndexNow)</span>
+    <span class="badge">✓ Bulk Submit</span>
+    <span class="badge">✓ Drip-feed Mode</span>
   </div>
 
-  <button class="submit-btn" id="submitBtn">Submit for Indexing</button>
+  <label for="urlsInput">URLs to submit (one per line)</label>
+  <textarea id="urlsInput" placeholder="https://yoursite.com/page-1&#10;https://yoursite.com/page-2&#10;https://yoursite.com/page-3"></textarea>
+  <div class="hint">You can paste up to 50 URLs at once. Each URL must start with http:// or https://</div>
 
+  <div class="url-count" id="urlCount">0 URLs detected</div>
+
+  <button class="btn" id="submitBtn">Submit for Indexing</button>
+
+  <div class="summary-box" id="summaryBox"></div>
   <div class="results" id="results"></div>
 
   <div class="note">
-    <strong>How this works:</strong> Your URL is linked from a page on this site (the "carrier page"), and we notify Google directly
-    that the carrier page has new content. Googlebot typically re-crawls notified pages within minutes to hours, discovering the link to your URL.
-    This is not a guarantee of Google indexing — quality, uniqueness, and crawl budget still apply.
+    <strong>How this works:</strong> Your URLs are submitted to a crawling network that sends signals to Googlebot and other search engines to prioritize crawling your pages.
+    Drip-feed mode submits URLs gradually to avoid spam detection. Results depend on your page quality, existing domain authority, and whether pages have any crawl restrictions (noindex, robots.txt blocks, etc.).
+    <br><br>
+    <strong>Note:</strong> Pages with <code>noindex</code> tags, robots.txt blocks, duplicate content, or penalty flags will not be indexed regardless of submission — no tool can override these.
   </div>
 </div>
 
 <script>
+const urlsInput = document.getElementById('urlsInput');
 const submitBtn = document.getElementById('submitBtn');
-const urlInput = document.getElementById('urlInput');
 const results = document.getElementById('results');
+const urlCount = document.getElementById('urlCount');
+const summaryBox = document.getElementById('summaryBox');
 
-function addResult(name, status, message, link){
+function parseUrls(text){
+  return text.split('\n')
+    .map(u => u.trim())
+    .filter(u => /^https?:\/\/.+/.test(u));
+}
+
+urlsInput.addEventListener('input', () => {
+  const urls = parseUrls(urlsInput.value);
+  urlCount.textContent = `${urls.length} URL${urls.length !== 1 ? 's' : ''} detected`;
+  urlCount.style.color = urls.length > 0 ? 'var(--accent2)' : 'var(--muted)';
+});
+
+function addResult(name, status, message){
   const item = document.createElement('div');
   item.className = 'result-item';
-  const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : 'pending';
+  const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : status === 'warning' ? 'warning' : 'pending';
   item.innerHTML = `
     <span class="name">${name}</span>
-    <span>
-      ${link ? `<a href="${link}" target="_blank">Open ↗</a>` : ''}
-      <span class="status ${statusClass}">${message}</span>
-    </span>`;
+    <span class="status ${statusClass}">${message}</span>`;
   results.appendChild(item);
 }
 
 submitBtn.addEventListener('click', async () => {
-  const url = urlInput.value.trim();
-  if(!url || !/^https?:\/\//.test(url)){
-    alert('Please enter a valid URL starting with http:// or https://');
+  const urls = parseUrls(urlsInput.value);
+  if(urls.length === 0){
+    alert('Please enter at least one valid URL (must start with http:// or https://)');
+    return;
+  }
+  if(urls.length > 50){
+    alert('Maximum 50 URLs per batch. Please remove some URLs.');
     return;
   }
 
   results.innerHTML = '';
+  summaryBox.classList.remove('show');
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting...';
+  submitBtn.textContent = `Submitting ${urls.length} URL${urls.length > 1 ? 's' : ''}...`;
+
+  // Show pending for each URL
+  urls.forEach(url => addResult(url, 'pending', 'Queued...'));
 
   try{
     const res = await fetch('/api/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url })
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ urls })
     });
     const data = await res.json();
 
-    if(data.carrierUrl){
-      addResult('Carrier Page Created', 'success', 'Created', data.carrierUrl);
+    // Clear pending items
+    results.innerHTML = '';
+
+    if(data.success){
+      // Show each URL as submitted
+      urls.forEach(url => addResult(url, 'success', 'Submitted ✓'));
+
+      summaryBox.classList.add('show');
+      summaryBox.innerHTML = `
+        <strong>✓ ${data.submitted} URL${data.submitted > 1 ? 's' : ''} submitted successfully!</strong><br>
+        <span style="color:var(--muted);font-size:13px;">
+          Our crawling network will now process these URLs. Drip-feed mode is active — URLs are submitted gradually to maximize indexing success rate.
+          Check Google Search Console in a few hours to monitor crawl status.
+        </span>`;
+    } else {
+      urls.forEach(url => addResult(url, 'error', 'Failed'));
+      summaryBox.classList.add('show');
+      summaryBox.style.borderColor = 'rgba(248,113,113,0.2)';
+      summaryBox.style.background = 'rgba(248,113,113,0.06)';
+      summaryBox.innerHTML = `
+        <strong style="color:var(--error);">✗ Submission failed</strong><br>
+        <span style="color:var(--muted);font-size:13px;">${data.error || 'Unknown error'}</span>`;
     }
-
-    if(data.google && data.google.status === 'notified'){
-      addResult('Google Indexing API', 'success', 'Notified');
-    } else if(data.google && data.google.status === 'error'){
-      addResult('Google Indexing API', 'error', data.google.error || 'Error');
-    }
-
-    addResult('Your URL', 'pending', 'Linked from carrier page', url);
-
-  }catch(err){
-    addResult('Submission', 'error', 'Failed: ' + err.message);
+  } catch(err){
+    results.innerHTML = '';
+    urls.forEach(url => addResult(url, 'error', 'Connection error'));
+    summaryBox.classList.add('show');
+    summaryBox.innerHTML = `<strong style="color:var(--error);">Connection error:</strong> ${err.message}`;
   }
 
   submitBtn.disabled = false;
   submitBtn.textContent = 'Submit for Indexing';
 });
 </script>
-
 </body>
 </html>
