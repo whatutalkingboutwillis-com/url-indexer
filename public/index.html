@@ -4,15 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Instant URL Indexer - Fast Google Indexing Tool</title>
-<meta name="description" content="Submit your URLs for fast Google indexing. Powered by Sinbyte crawling network.">
-
+<meta name="description" content="Submit your URLs for fast Google indexing. No third-party credits needed. Free independent tool.">
 <style>
   :root{
-    --bg:#0b1020; --panel:#121a33; --panel2:#0e1530;
-    --accent:#4f7cff; --accent2:#22d3ee;
-    --text:#e6eaf5; --muted:#9aa4c2;
-    --success:#34d399; --error:#f87171; --warning:#fbbf24;
-    --radius:14px; --font:'Sora',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+    --bg:#0b1020;--panel:#121a33;--accent:#4f7cff;--accent2:#22d3ee;
+    --text:#e6eaf5;--muted:#9aa4c2;--success:#34d399;--error:#f87171;
+    --radius:14px;--font:'Sora',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{
@@ -32,59 +29,62 @@
     background:linear-gradient(90deg,var(--text),var(--accent2));
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   }
-  p.sub{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.7;}
-
+  p.sub{color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.7;}
   .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
   .badge{
     font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;
     background:rgba(79,124,255,0.12);border:1px solid rgba(79,124,255,0.25);color:var(--accent2);
   }
-
   label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--muted);}
   textarea{
-    width:100%;min-height:120px;background:#0b1020;
+    width:100%;min-height:130px;background:#0b1020;
     border:1px solid rgba(255,255,255,0.1);color:var(--text);
     padding:14px 16px;border-radius:10px;font-size:14px;
     font-family:var(--mono);outline:none;resize:vertical;margin-bottom:6px;
-    transition:border-color 0.2s;
+    transition:border-color 0.2s;line-height:1.8;
   }
   textarea:focus{border-color:var(--accent);}
-  .hint{font-size:12px;color:var(--muted);margin-bottom:18px;}
-
-  .url-count{
-    display:inline-block;font-size:13px;font-weight:600;
-    color:var(--accent2);margin-bottom:16px;
-  }
-
+  .hint{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .url-count{display:block;font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:18px;}
   button.btn{
     width:100%;padding:16px;border:none;border-radius:10px;
     background:linear-gradient(90deg,var(--accent),var(--accent2));
-    color:#08101f;font-weight:700;font-size:15px;cursor:pointer;
+    color:#08101f;font-weight:700;font-size:16px;cursor:pointer;
     transition:transform 0.15s,box-shadow 0.15s;font-family:var(--font);
+    letter-spacing:0.3px;
   }
   button.btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(79,124,255,0.35);}
   button.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
 
-  .results{margin-top:24px;display:flex;flex-direction:column;gap:10px;}
+  /* Progress bar */
+  .progress-wrap{margin-top:20px;display:none;}
+  .progress-wrap.show{display:block;}
+  .progress-label{font-size:13px;color:var(--muted);margin-bottom:8px;}
+  .progress-bar-bg{height:6px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;}
+  .progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width 0.4s ease;}
+
+  /* Results */
+  .results{margin-top:20px;display:flex;flex-direction:column;gap:8px;}
   .result-item{
     display:flex;justify-content:space-between;align-items:center;
     background:#0b1020;border:1px solid rgba(255,255,255,0.06);
-    border-radius:10px;padding:13px 16px;font-size:14px;gap:10px;flex-wrap:wrap;
+    border-radius:10px;padding:13px 16px;font-size:13px;gap:10px;flex-wrap:wrap;
   }
-  .result-item .name{font-weight:600;font-size:13px;word-break:break-all;flex:1;}
+  .result-item .name{font-weight:500;word-break:break-all;flex:1;color:var(--muted);}
+  .result-item .signals{font-size:12px;color:var(--muted);}
   .status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;}
   .status.success{background:rgba(52,211,153,0.15);color:var(--success);}
   .status.error{background:rgba(248,113,113,0.15);color:var(--error);}
-  .status.pending{background:rgba(255,255,255,0.08);color:var(--muted);}
-  .status.warning{background:rgba(251,191,36,0.15);color:var(--warning);}
+  .status.pending{background:rgba(255,255,255,0.06);color:var(--muted);}
 
   .summary-box{
-    margin-top:16px;padding:16px 18px;border-radius:10px;
-    border:1px solid rgba(52,211,153,0.2);background:rgba(52,211,153,0.06);
-    font-size:14px;display:none;
+    margin-top:16px;padding:18px 20px;border-radius:12px;
+    border:1px solid rgba(52,211,153,0.2);background:rgba(52,211,153,0.05);
+    display:none;
   }
   .summary-box.show{display:block;}
-  .summary-box strong{color:var(--success);}
+  .summary-box .big{font-size:18px;font-weight:700;color:var(--success);margin-bottom:6px;}
+  .summary-box p{font-size:13px;color:var(--muted);line-height:1.7;}
 
   .note{
     margin-top:22px;font-size:12.5px;color:var(--muted);
@@ -100,32 +100,40 @@
   <div class="eyebrow">⚡ Instant URL Indexer</div>
   <h1>Submit URLs for Fast Indexing</h1>
   <p class="sub">
-    Paste your URLs below (one per line). We'll submit them to our indexing network for priority crawling by Google and other search engines.
+    Paste your URLs below — one per line. Our independent indexing engine sends crawl signals to Google, Bing, Yandex and multiple ping networks simultaneously. No third-party credits needed.
   </p>
 
   <div class="badge-row">
-    <span class="badge">✓ Google Crawl Trigger</span>
+    <span class="badge">✓ Google Sitemap Ping</span>
     <span class="badge">✓ Bing + Yandex (IndexNow)</span>
-    <span class="badge">✓ Bulk Submit</span>
-    <span class="badge">✓ Drip-feed Mode</span>
+    <span class="badge">✓ Multi-Ping Network</span>
+    <span class="badge">✓ Bulk Submit (50 URLs)</span>
+    <span class="badge">✓ No Credits Needed</span>
   </div>
 
   <label for="urlsInput">URLs to submit (one per line)</label>
   <textarea id="urlsInput" placeholder="https://yoursite.com/page-1&#10;https://yoursite.com/page-2&#10;https://yoursite.com/page-3"></textarea>
-  <div class="hint">You can paste up to 50 URLs at once. Each URL must start with http:// or https://</div>
+  <div class="hint">Paste up to 50 URLs. Each must start with http:// or https://</div>
+  <span class="url-count" id="urlCount">0 URLs detected</span>
 
-  <div class="url-count" id="urlCount">0 URLs detected</div>
+  <button class="btn" id="submitBtn">⚡ Submit for Indexing</button>
 
-  <button class="btn" id="submitBtn">Submit for Indexing</button>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label" id="progressLabel">Sending signals...</div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+  </div>
 
-  <div class="summary-box" id="summaryBox"></div>
+  <div class="summary-box" id="summaryBox">
+    <div class="big" id="summaryTitle"></div>
+    <p id="summaryDetail"></p>
+  </div>
+
   <div class="results" id="results"></div>
 
   <div class="note">
-    <strong>How this works:</strong> Your URLs are submitted to a crawling network that sends signals to Googlebot and other search engines to prioritize crawling your pages.
-    Drip-feed mode submits URLs gradually to avoid spam detection. Results depend on your page quality, existing domain authority, and whether pages have any crawl restrictions (noindex, robots.txt blocks, etc.).
+    <strong>How this works:</strong> Each submitted URL gets pinged to Google Sitemap service, Bing (IndexNow), Yandex (IndexNow), Ping-o-matic network, and multiple XML-RPC ping services simultaneously — same approach used by professional indexing tools.
     <br><br>
-    <strong>Note:</strong> Pages with <code>noindex</code> tags, robots.txt blocks, duplicate content, or penalty flags will not be indexed regardless of submission — no tool can override these.
+    <strong>Important:</strong> Pages with <code>noindex</code> tags, robots.txt blocks, thin/duplicate content, or manual penalties will not be indexed regardless of crawl signals. This tool maximizes crawl discovery speed — final indexing is Google's decision.
   </div>
 </div>
 
@@ -135,26 +143,37 @@ const submitBtn = document.getElementById('submitBtn');
 const results = document.getElementById('results');
 const urlCount = document.getElementById('urlCount');
 const summaryBox = document.getElementById('summaryBox');
+const summaryTitle = document.getElementById('summaryTitle');
+const summaryDetail = document.getElementById('summaryDetail');
+const progressWrap = document.getElementById('progressWrap');
+const progressLabel = document.getElementById('progressLabel');
+const progressFill = document.getElementById('progressFill');
 
 function parseUrls(text){
-  return text.split('\n')
-    .map(u => u.trim())
-    .filter(u => /^https?:\/\/.+/.test(u));
+  return [...new Set(
+    text.split('\n')
+      .map(u => u.trim())
+      .filter(u => /^https?:\/\/.+/.test(u))
+  )].slice(0, 50);
 }
 
 urlsInput.addEventListener('input', () => {
   const urls = parseUrls(urlsInput.value);
   urlCount.textContent = `${urls.length} URL${urls.length !== 1 ? 's' : ''} detected`;
-  urlCount.style.color = urls.length > 0 ? 'var(--accent2)' : 'var(--muted)';
 });
 
-function addResult(name, status, message){
+function setProgress(pct, label){
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = label;
+}
+
+function addResult(url, success, signals, total){
   const item = document.createElement('div');
   item.className = 'result-item';
-  const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : status === 'warning' ? 'warning' : 'pending';
   item.innerHTML = `
-    <span class="name">${name}</span>
-    <span class="status ${statusClass}">${message}</span>`;
+    <span class="name">${url}</span>
+    <span class="signals">${signals}/${total} signals sent</span>
+    <span class="status ${success ? 'success' : 'error'}">${success ? '✓ Submitted' : '✗ Failed'}</span>`;
   results.appendChild(item);
 }
 
@@ -164,20 +183,18 @@ submitBtn.addEventListener('click', async () => {
     alert('Please enter at least one valid URL (must start with http:// or https://)');
     return;
   }
-  if(urls.length > 50){
-    alert('Maximum 50 URLs per batch. Please remove some URLs.');
-    return;
-  }
 
   results.innerHTML = '';
   summaryBox.classList.remove('show');
+  progressWrap.classList.add('show');
   submitBtn.disabled = true;
   submitBtn.textContent = `Submitting ${urls.length} URL${urls.length > 1 ? 's' : ''}...`;
 
-  // Show pending for each URL
-  urls.forEach(url => addResult(url, 'pending', 'Queued...'));
+  setProgress(10, `Preparing ${urls.length} URL${urls.length > 1 ? 's' : ''}...`);
 
   try{
+    setProgress(30, 'Sending crawl signals to Google, Bing, Yandex...');
+
     const res = await fetch('/api/submit', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -185,38 +202,41 @@ submitBtn.addEventListener('click', async () => {
     });
     const data = await res.json();
 
-    // Clear pending items
-    results.innerHTML = '';
+    setProgress(90, 'Processing results...');
 
     if(data.success){
-      // Show each URL as submitted
-      urls.forEach(url => addResult(url, 'success', 'Submitted ✓'));
+      let successCount = 0;
+      (data.results || []).forEach(r => {
+        const ok = r.success && r.signals_sent > 0;
+        if(ok) successCount++;
+        addResult(r.url, ok, r.signals_sent || 0, r.total_methods || 6);
+      });
 
+      setProgress(100, 'Done!');
       summaryBox.classList.add('show');
-      summaryBox.innerHTML = `
-        <strong>✓ ${data.submitted} URL${data.submitted > 1 ? 's' : ''} submitted successfully!</strong><br>
-        <span style="color:var(--muted);font-size:13px;">
-          Our crawling network will now process these URLs. Drip-feed mode is active — URLs are submitted gradually to maximize indexing success rate.
-          Check Google Search Console in a few hours to monitor crawl status.
-        </span>`;
+      summaryTitle.textContent = `✓ ${successCount} of ${urls.length} URL${urls.length > 1 ? 's' : ''} submitted successfully`;
+      summaryDetail.innerHTML = `
+        Crawl signals sent to: <strong style="color:var(--text)">Google, Bing, Yandex, IndexNow, Ping-o-matic</strong> and more.
+        <br>Check Google Search Console in a few hours to monitor crawl status. Pages with good content and no restrictions typically get crawled within hours.`;
     } else {
-      urls.forEach(url => addResult(url, 'error', 'Failed'));
-      summaryBox.classList.add('show');
+      setProgress(100, 'Error');
       summaryBox.style.borderColor = 'rgba(248,113,113,0.2)';
-      summaryBox.style.background = 'rgba(248,113,113,0.06)';
-      summaryBox.innerHTML = `
-        <strong style="color:var(--error);">✗ Submission failed</strong><br>
-        <span style="color:var(--muted);font-size:13px;">${data.error || 'Unknown error'}</span>`;
+      summaryBox.style.background = 'rgba(248,113,113,0.05)';
+      summaryBox.classList.add('show');
+      summaryTitle.style.color = 'var(--error)';
+      summaryTitle.textContent = '✗ Submission failed';
+      summaryDetail.textContent = data.error || 'Unknown error occurred';
     }
   } catch(err){
-    results.innerHTML = '';
-    urls.forEach(url => addResult(url, 'error', 'Connection error'));
+    setProgress(100, 'Connection error');
     summaryBox.classList.add('show');
-    summaryBox.innerHTML = `<strong style="color:var(--error);">Connection error:</strong> ${err.message}`;
+    summaryTitle.style.color = 'var(--error)';
+    summaryTitle.textContent = '✗ Connection error';
+    summaryDetail.textContent = err.message;
   }
 
   submitBtn.disabled = false;
-  submitBtn.textContent = 'Submit for Indexing';
+  submitBtn.textContent = '⚡ Submit for Indexing';
 });
 </script>
 </body>
